@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bright-cosmology"
+version = "0.1.0"
+description = "Multi-messenger GW + EM cosmology pipeline built on GWFish"
+requires-python = ">=3.9,<3.12"
+authors = [{name = "Andrea Cozzumbo"}]
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = [
+    "gwfish @ git+https://github.com/janosch314/GWFish.git@f95f4ab1d5db7298c562dbb8a6f02993348bb001",
+    "numpy",
+    "pandas",
+    "astropy",
+    "scipy",
+    "matplotlib",
+    "tqdm",
+    "dill",
+    "corner",
+    "getdist",
+    "pyyaml",
+    "george",
+    "lalsuite",
+    "tables",
+    "cobaya>=3.5",
+]
+
+[project.optional-dependencies]
+# `classy` (the CLASS Python wrapper used by code/cosmology.py and code/mm_gw.py) is not a
+# hard dependency because the hi-class wrapper has the same name: installing the PyPI one
+# would overwrite it. Use this extra for standard CLASS; for modified-gravity models build
+# and install hi-class instead.
+class = ["classy"]
+# parallel MCMC chains
+mpi = ["mpi4py", "openmpi"]
+# notebooks/mm_gp_analysis.ipynb
+notebook = ["jupyterlab", "ipykernel", "nbconvert"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

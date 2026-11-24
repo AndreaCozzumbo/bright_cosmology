@@ -1,0 +1,48 @@
+#--------------------- #
+# Data has been stored #
+#--------------------- #
+data_directory: cobaya_data
+
+#---------------------#
+#  Fiducial Cosmology #
+#---------------------#
+fiducial_cosmology: LCDM_Planck18
+# fiducial_cosmology: PEDE
+
+#---------------------#
+#  Detector Networks  #
+#---------------------#
+gw_network: ET_2L
+
+#---------------------#
+#    GRB catalog      #
+#---------------------#
+grb_dataset: fiducial
+
+#---------------------#
+#  Peculiar velocities #
+#---------------------#
+# None: densities from GW only
+# integrated: densities with peculiar velocities (only with interpolation_method: kde)
+peculiar_velocity: None
+# peculiar_velocity: integrated
+
+#--------------------- #
+# Interpolation Method #
+#--------------------- #
+# kde: probability densities of d_L
+# gaussian: chi^2 with the errors of GWFish. It needs peculiar_velocity: None
+interpolation_method: kde
+# interpolation_method: gaussian
+
+#--------------------- #
+#     GR values        #
+#--------------------- #
+
+# sigma_f : 1
+# ell_f: 1
+# random: 3
+
+#A: 1
+
+

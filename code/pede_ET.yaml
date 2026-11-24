@@ -1,0 +1,133 @@
+###########################################################################################################################################
+#
+# PEDE cosmology + single triangular Einstein Telescope (ET-delta): mock GW data for the GP
+# analysis of notebooks/mm_gp_analysis.ipynb. Runs without CLASS modifications. From any folder:
+#
+#     python code/mm_gw.py --config code/pede_ET.yaml
+#
+###########################################################################################################
+
+#######################################################   COSMOLOGY SETTINGS   ############################################################
+
+Cosmology:
+### Chose the name of your cosmological model
+
+    CosmologicalModel       : 'PEDE'
+
+Parameters:
+### Choose of the model parameters
+
+    Parameters  : {'Omega_m': 0.295, 'H0': 70.3}
+
+Computation type:
+
+    ### 'external': f_DE(z) is read from a script of code/external/external_w, and H(z) is computed from it.
+    ### No modification of CLASS is needed
+
+    Mode         : 'external'
+    Settings     : {'script': 'code/external/external_w/generate_w_PEDE.py'}
+
+ModifiedGravity:
+
+    MGBool        : False
+
+    MGparameters  : {'ParametricMG': False}
+
+###########################################################################################################################################
+
+#######################################################   GWFish SETTINGS   ###############################################################
+
+GW Detector:
+### Chose the path of your GWFish detector input file, the combination you want to test and their configuration
+
+                    # if want to use the default one write ' '
+    DetectorPath    : ' '
+
+                    # if want to use the default one write None
+    SNRThresholds   :  np.array([0., 8.])
+
+    Detectors       : 'ET_delta'
+
+    DerectorsCofig  : ['ET']
+
+    Network         : '[[0]]'
+
+    FisherParameters: ['chirp_mass', 'mass_ratio', 'luminosity_distance', 'theta_jn', 'psi', 'phase']
+
+    Waveform        : 'IMRPhenomHM'
+
+    CornerLabels    : ['$\mathcal{M}_c$ $[M_{\odot}]$', '$q$', '$d_L$ [Mpc]', '$\iota$ [rad]', '$\Psi$ [rad]', '$\phi$ [rad]']
+
+Priors:             # if you want to use the default one do not specify --> use None. You can only change these priors for now
+
+    ChirpMassPriorType   : None
+
+    ComponentMassLower   : 1.1   #M_solar
+
+    ComponentMassUpper   : 2.5   #M_solar
+
+    dLPriorType     : 'uniform_in_differential_comoving_volume_Class' # Class suited for any cosmology
+
+    dLLower         : 10    #Mpc
+
+    dLUpper         : 50000 #Mpc
+
+    ThetaPriorType  : None
+
+    theta_jnLower   : 0.   #deg
+
+    theta_jnUpper   : 5.   #deg
+
+    NSampling       : 1_000_000                # number of samples for the Fisher matrix and truncation and final posteriors
+
+    MinTruncated    : np.array([0, 0.05, 0, 0, 0, 0])
+
+    MaxTruncated    : np.array([np.inf, 1, 50000, np.pi, 2*np.pi, 2*np.pi])
+
+    KDESmoothing    : 0.3 #default = 0.3
+
+
+Bools:
+
+    MockBool                 : True            # true if you want the full mock data with d_L posteriors  # false if you want only the d_L values from GWFish
+
+    CornerBool               : False            # true if you want the corner plot of the posteriors GW parameters
+
+    DensityBool              : False           # true if you want the density plot of dL
+
+    SavePosteriorBool        : False           # true if you want to save the posterior
+
+    PeculiarCorrectionBool   : True            # true if you want to include the correction for the peculiar velocity
+
+    PlotPeculiarVelocityBool : False            # true if you want to plot the peculiar velocity correction
+
+
+Paths:
+### Set the paths for the input/output
+
+    TracerInput      : 'code/input_catalogs'
+                        # catalog needs to be in M_chirp and q
+                        # take this format for the catalogs: name_type_others.hdf5
+    Catalog          : 'grb_fiducialchirpq.hdf5'
+
+    Injection4GWfish : 'code/input_data/injections_4gwfish'
+
+    CosmoResults     : 'code/output_data/cosmo_results'
+
+    GWFishResults    : 'code/gwfish_temp_results'
+
+    OutputNoPrior    : 'code/noprior_results'
+
+    MockPath         : 'code/output_data/data_to_analyze'
+
+    PathTest         : 'tests/test8/data'
+
+    PathMCMC         : 'code/output_mcmc'
+
+Peculiar Velocity:
+
+    Mean_vp          : 300
+
+    Sigma_vp         : 200
+
+    z_vp_threshold   : 0.15

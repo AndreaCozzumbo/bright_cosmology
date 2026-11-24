@@ -1,0 +1,39 @@
+# Detectors used in this repo, in the format of GWFish. Noise curves (PSD: power spectral density) in detectors/psd.
+# To use this file: DetectorPath : 'detectors/detectors.yaml' in the config file of code/mm_gw.py.
+#
+# ET   : Einstein Telescope, triangle with 10 km arms (same as the GWFish default)
+# CE40 : Cosmic Explorer with 40 km arms (not in the default detectors.yaml of GWFish)
+
+ET:
+        lat:              (40 + 31. / 60 ) * np.pi / 180.
+        lon:              (9 + 25. / 60) * np.pi / 180.
+        opening_angle:    np.pi / 3.
+        azimuth:          70.5674 * np.pi / 180.
+        psd_path:         Path('detectors/psd')
+        psd_data:         ET_psd.txt
+        duty_factor:      0.85
+        detector_class:   earthDelta
+        plotrange:        3, 1000, 1e-25, 1e-20
+        fmin:             2.
+        fmax:             2048.
+        spacing:          geometric
+        df:               1./16.
+        npoints:          1000   
+        arm_length:       10000           
+
+CE40:
+        lat:              46.5 * np.pi / 180.
+        lon:              -119.4 * np.pi / 180.
+        opening_angle:    np.pi / 2.
+        azimuth:          126. * np.pi / 180.
+        psd_path:         Path('detectors/psd')
+        psd_data:         CE40_psd.txt
+        duty_factor:      0.85
+        detector_class:   earthL
+        plotrange:        10, 1000, 1e-25, 1e-20
+        fmin:             8
+        fmax:             1024
+        spacing:          geometric 
+        df:               1./4.    
+        npoints:          5000 
+        arm_length:       40000

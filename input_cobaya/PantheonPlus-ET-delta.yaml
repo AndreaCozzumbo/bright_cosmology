@@ -1,0 +1,111 @@
+# GP reconstruction of f_DE(z) from GW bright sirens (ET-delta) + Pantheon+ supernovae
+#
+# Run from the repo root:
+#
+#     OMP_NUM_THREADS=1 mpirun -n 4 cobaya-run input_cobaya/PantheonPlus-ET-delta.yaml
+#
+# (one thread per chain: numpy's multi-threading makes this likelihood ~3x slower)
+# All paths are relative to the repo root.
+
+theory:
+  theory.DDE.GaussianProcessDDE:
+    python_path: .
+    # the SNe must see the GP expansion history, see theory/DDE.py
+    provides: ['angular_diameter_distance']
+    nz_points: 100
+
+likelihood:
+  likelihood.MMcosmologyGP:
+    python_path: .
+    # cobaya_data: shipped catalog. To use one that you generated yourself:
+    # code/output_mcmc/PEDE/ET_delta_PEDE_fiducialchirpq
+    data_directory: cobaya_data
+    gw_network: ET_delta
+    grb_dataset: fiducialchirpq
+    fiducial_cosmology: PEDE
+    # kde: probability densities of d_L. gaussian: chi^2 with the errors of GWFish
+    interpolation_method: kde
+    # integrated: with peculiar velocities. None: without (needed by gaussian)
+    peculiar_velocity: integrated
+  sn.pantheonplus:
+    path: packages/data/sn_data
+    # mock written by code/sn_mock.py in the same cosmology as the GW data.
+    # For the real Pantheon+ use PantheonPlus/config.dataset
+    dataset_file: PantheonPlus/Pantheon_plus_PEDE.dataset
+    use_abs_mag: True
+
+params:
+  omega_b:
+    value: 0.0224
+    latex: \Omega_\mathrm{b} h^2
+  Omega_cdm:
+    prior:
+      min: 0.001
+      max: 0.99
+    ref:
+      dist: norm
+      loc: 0.26
+      scale: 0.02
+    proposal: 0.02
+    latex: \Omega_\mathrm{c}
+  h:
+    prior:
+      min: 0.2
+      max: 1
+    ref:
+      dist: norm
+      loc: 0.70
+      scale: 0.005
+    proposal: 0.005
+    latex: h
+  sigma_f:
+    prior:
+      min: 0.0001
+      max: 5
+    ref: 0.3361961
+    proposal: 0.1
+    latex: \sigma_f
+  ell_f:
+    prior:
+      min: 0.01
+      max: 10
+    ref: 4.5406982
+    proposal: 0.5
+    latex: \ell_f
+  # labels the GP realisation: seed = int(1e5*random)
+  random:
+    prior:
+      min: 0
+      max: 50
+    ref: 21.318844
+    proposal: 5
+    drop: true
+  Mb:
+    prior:
+      min: -20
+      max: -18
+    ref:
+      dist: norm
+      loc: -19.3
+      scale: 0.02
+    proposal: 0.02
+    latex: M_b
+  log_sigma_f:
+    value: 'lambda sigma_f: np.log(sigma_f)'
+    latex: \log{\sigma_f}
+  log_ell_f:
+    value: 'lambda ell_f: np.log(ell_f)'
+    latex: \log{\ell_f}
+  seed:
+    value: 'lambda random: int(1e5*random)'
+  Omega_m:
+    latex: \Omega_\mathrm{m}
+  Omega_Lambda:
+    latex: \Omega_\Lambda
+
+sampler:
+  mcmc:
+    max_tries: 10000000
+    Rminus1_stop: 0.01
+
+output: chains/PantheonPlus-ET-delta/PantheonPlus-ET-delta
